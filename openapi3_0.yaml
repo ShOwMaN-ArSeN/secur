@@ -1,0 +1,187 @@
+openapi: 3.0.2
+info:
+  title: Тестовый мессенджер
+  version: 0.0.1
+servers:
+  - url: http://localhost:8080/server/
+    description: Сервер
+paths:
+  /userRegistration:
+    post:
+      summary: Регистрация пользователя
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+                email:
+                  type: string
+              required:
+                - username
+                - password
+                - email
+      responses:
+        '200':
+          description: Успешная регистрация
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                  message:
+                    type: string
+  /userLogin:
+    post:
+      summary: Авторизация пользователя
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+              required:
+                - username
+                - password
+      responses:
+        '200':
+          description: Успешная авторизация
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  userId:
+                    type: string
+  /userInfo/{userId}:
+    get:
+      summary: Получение профиля пользователя
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: Идентификатор пользователя
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Успешное получение профиля
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                  username:
+                    type: string
+                  email:
+                    type: string
+  /userUpdateInfo/{userId}:
+    put:
+      summary: Обновление профиля пользователя
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: Идентификатор пользователя
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+      responses:
+        '200':
+          description: Успешное обновление профиля
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /getUserMessages/{userId}:
+    get:
+      summary: Получение сообщений для пользователя
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: Идентификатор пользователя
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Успешное получение сообщений
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    messageId:
+                      type: string
+                    senderId:
+                      type: string
+                    receiverId:
+                      type: string
+                    senderUsername:
+                      type: string
+                    content:
+                      type: string
+                    timestamp:
+                      type: string
+                      format: date-time
+  /messageSend:
+    post:
+      summary: Отправка сообщения от пользователя другому пользователю
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                senderId:
+                  type: string
+                receiverId:
+                  type: string
+                content:
+                  type: string
+              required:
+                - senderId
+                - receiverId
+                - content
+      responses:
+        '200':
+          description: Сообщение отправлено
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messageId:
+                    type: string
